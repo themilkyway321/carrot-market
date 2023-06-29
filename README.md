@@ -175,3 +175,50 @@ Tailwind CSS v3.0 이전: 거대한 CSS파일을 생성하고, 그 파일에 이
 Tailwind CSS v3.0이후: 사용자가 사용하는 스타일들만 그때 그때 생성해서 사용하는 방식. 여러 클래스들을 조합해서 사용할 수 있고, 매우 가볍고, 배포 전 purge를 해주지 않아도 되서 편함
 
 https://tailwindcss.com/docs/upgrade-guide#migrating-to-the-jit-engine
+
+
+Plugins
+재사용 가능한 타사 플러그인으로 Tailwind 플러그인을 사용하면 CSS 대신 JavaScript를 사용하여 사용자의 스타일시트에 삽입할 Tailwind에 대한 새 스타일을 등록할 수 있습니다.
+https://tailwindcss.com/docs/plugins
+
+@tailwindcss/forms
+(form요소에 다양한 기본 스타일을 추가해줍니다.)
+form 요소를 유틸리티로 쉽게 재정의할 수 있도록 하는 form 스타일에 대한 기본 reset을 제공하는 플러그인입니다. @tailwindcss/forms 플러그인은 유틸리티 클래스를 사용하여 form 요소의 스타일을 쉽게 지정할 수 있도록 하는 독창적인 form reset layer를 추가합니다.
+npm install -D @tailwindcss/forms
+
+@tailwindcss/forms 플러그인 설치 후, tailwind.config.js에 아래와 같이 plugins에 추가
+```
+// tailwind.config.js
+module.exports = {
+theme: {
+// ...
+},
+plugins: [
+require('@tailwindcss/forms'),
+// ...
+],
+}
+```
+https://tailwindcss.com/docs/plugins#forms
+https://github.com/tailwindlabs/tailwindcss-forms
+
+user-select
+CSS user-select 속성은 사용자가 텍스트를 선택할 수 있는지 지정합니다.
+ex) user-select: none;
+https://developer.mozilla.org/ko/docs/Web/CSS/user-select
+
+
+
+Heroicons
+Tailwind CSS로부터 만들어진 손으로 만든 아름다운 SVG 아이콘
+https://heroicons.com/
+
+Space Between (space-x, space-y)
+자식 요소 사이의 공간을 제어하기 위한 유틸리티입니다.
+https://tailwindcss.com/docs/space#add-vertical-space-between-children
+
+space-x-{amount} 유틸리티를 사용하여 요소 사이의 수평 공간을 제어합니다.
+ex) space-x-4
+
+space-y-{amount} 유틸리티를 사용하여 요소 사이의 수직 공간을 제어합니다.
+ex) space-y-4
