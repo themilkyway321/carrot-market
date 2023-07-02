@@ -222,3 +222,100 @@ ex) space-x-4
 
 space-y-{amount} 유틸리티를 사용하여 요소 사이의 수직 공간을 제어합니다.
 ex) space-y-4
+
+
+textarea의 사이즈를 고정시키고 싶으신 분들은 textarea에 resize-none을 추가해주시면 됩니다.
+row={10} 세로 사이즈 조정
+
+label
+
+HTML label 요소는 사용자 인터페이스 항목의 설명을 나타냅니다.
+label 을 input 요소와 연결하면 몇 가지 이점이 있습니다.
+
+1. label 텍스트는 텍스트 입력과 시각적으로 관련이 있을뿐만 아니라 프로그래밍적으로도 관련이 있습니다. 예를 들어, 화면리더기(screenreader) 는 폼 입력(form input)에서 label 을 읽어서 보조기술(assistive technology) 사용자가 입력해야하는 텍스트가 무엇인지 더 쉽게 이해할 수 있게 합니다.
+
+2. 관련 label 을 클릭해서 input 자체에 초점을 맞추거나 활성화를 시킬 수 있습니다. (활성되어서)늘어난 누를 수 있는 영역(hit area)은 터치스크린 사용자를 포함해 입력하려하는 모든 사람에게 이점을 줍니다.
+
+label 을 input 요소와 연관시키려면, input 에 id 속성을 넣어야합니다. 그런 다음 label 에 id 와 같은 값의 for 속성을 넣어야합니다.
+```
+< label for="username">Click me< /label>
+< input type="text" id="username">
+```
+https://developer.mozilla.org/ko/docs/Web/HTML/Element/label
+
+원화 기호
+₩
+
+
+
+Divide Width
+
+엘리먼트 사이의 border width를 제어하기 위한 유틸리티입니다.
+```
+divide-x => border-right-width: 1px; border-left-width: 0px;
+divide-x-2 => border-right-width: 2px; border-left-width: 0px;
+
+divide-y => border-top-width: 0px; border-bottom-width: 1px;
+divide-y-2 => border-top-width: 0px; border-bottom-width: 2px;
+```
+https://tailwindcss.com/docs/divide-width
+
++ divide-y-[1px]로 쓰거나 [1px]을 생략하고 divide-y로 쓸 수도 있습니다.
+
+
+Aspect Ratio
+
+요소의 종횡비를 제어하기 위한 유틸리티입니다.
+또는 대괄호를 사용하여 새로운 속성을 생성할 수도 있습니다.
+```
+aspect-auto => aspect-ratio: auto;
+aspect-square => aspect-ratio: 1 / 1;
+aspect-video => aspect-ratio: 16 / 9;
+
+iframe class="w-full aspect-[4/3]" src="https://www.youtube.com/...
+```
+https://tailwindcss.com/docs/aspect-ratio
+
+aspect-ratio
+종횡비 CSS 속성은 자동 크기 및 기타 레이아웃 기능 계산에 사용되는 상자의 기본 종횡비를 설정합니다.
+https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio
+
+video 아이콘 복사할 때 SVG가 아닌 JSX로 복사해오시면 속성 수정하지 않고 바로 사용가능합니다. (Copy JSX)
+https://heroicons.dev
+
+
+Max-Width
+
+요소의 최대 너비를 설정하는 유틸리티입니다.
+```
+max-w-none => max-width: none;
+max-w-xs => max-width: 20rem; /* 320px */
+max-w-sm => max-width: 24rem; /* 384px */
+max-w-md => max-width: 28rem; /* 448px */
+max-w-lg => max-width: 32rem; /* 512px */
+max-w-full => max-width: 100%;
+max-w-screen-sm => max-width: 640px;
+max-w-screen-md => max-width: 768px;
+max-w-screen-lg => max-width: 1024px;
+max-w-screen-xl => max-width: 1280px;
+등등
+```
+대괄호를 사용하여 임의의 값을 사용하여 즉시 속성을 생성할 수도 있습니다.
+div class="max-w-[50%]"
+
+https://tailwindcss.com/docs/max-width
+
+
+Heroicons
+https://heroicons.com/
+
+router.back()
+history로 navigate합니다. 브라우저의 뒤로 버튼을 클릭하는 것과 같습니다. window.history.back()을 실행합니다.
+https://nextjs.org/docs/api-reference/next/router#routerback
+
+router.push()
+클라이언트 측 전환을 처리합니다. 외부 URL에 대해 router.push를 사용할 필요가 없습니다. window.location은 이러한 경우에 더 적합합니다.
+https://nextjs.org/docs/api-reference/next/router#routerpush
+
+뒤로가기 아이콘
+←

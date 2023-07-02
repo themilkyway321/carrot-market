@@ -18,5 +18,8 @@
 
 body {
   color: rgb(var(--foreground-rgb));
- 
+  -ms-overflow-style: none;
+  ::-webkit-scrollbar {
+    display: none;
+    }
 }
