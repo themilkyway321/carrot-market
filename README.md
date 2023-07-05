@@ -319,5 +319,235 @@ router.push()
 클라이언트 측 전환을 처리합니다. 외부 URL에 대해 router.push를 사용할 필요가 없습니다. window.location은 이러한 경우에 더 적합합니다.
 https://nextjs.org/docs/api-reference/next/router#routerpush
 
-뒤로가기 아이콘
-←
+-------------------carrot-market-----------------------------------------------------
+
+### Prisma
+Prisma란 Node.js and Typescript ORM(Object Relational Mapping)
+=> JS or TS 와 데이터베이스 사이에 다리를 놓아줌 (기본적으로 번역기의 역할을 한다고 생각하면 됨)
+- Prisma를 사용하기 위해서는 먼저 Prisma에게 DB가 어떻게 생겼는지, 데이터의 모양을 설명해줘야 함 => schema.prisma
+
+- Prisma가 이런 타입에 관한 정보를 알고 있으면 client를 생성해줄 수 있음. client를 이용하면 TS로 DB와 직접 상호작용 가능, 자동완성 제공.
+
+- Prisma Studio : Visual Database Browser, DB를 위한 관리자 패널같은 것.
+
+### Prisma 셋업 (Typescript + MySQL)
+1. npm install prisma -D
+
+2. npx prisma init
+이 명령은 schema.prisma라는 파일과 프로젝트 루트에 .env 파일을 포함하는 prisma라는 새 디렉토리를 생성했습니다. schema.prisma는 데이터베이스 연결과 Prisma Client 생성기가 있는 Prisma 스키마를 포함합니다. .env는 환경 변수를 정의하기 위한 dotenv 파일입니다. (데이터베이스 연결에 사용됨)
+https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch/relational-databases-typescript-mysql
+
+Prisma Model 예시
+https://www.prisma.io/docs/concepts/components/prisma-schema
+
+VSCode Prisma Extension
+(Prisma 설치하기)
+
+### PlanetScale
+
+MySQL과 호환되는 Serverless 데이터베이스 플랫폼이며, Planetscale은 Vitess를 기반으로 제작되었다. 
+https://planetscale.com/
+
+Vitess: Vitess는 MySQL을 스케일링하기 위한 데이터베이스 클러스터링 시스템
+인터넷에서 가장 큰 사이트를 호스팅하는 강력한 오픈 소스 기술입니다. Vitess는 유튜브의 많은 데이터 처리를 위해 Google에서 제작한 오픈소스로 초당 수백만 개의 쿼리 처리와 수평 샤딩 등을 지원하기에 Planetscale 또한 그에 대해서 그대로 지원하는 장점이 있다.
+https://vitess.io/
+
+Vitess를 사용하는 이유
+1. 수평 스케일
+2. 고가용성 (Vitess의 기본 복제본 구성은 예기치 않은 이벤트가 발생할 때 기본에서 복제본으로 원활한 장애 조치를 허용합니다.)
+3. MySQL 호환
+4. 쿠버네티스 네이티브
+5. 구체화된 뷰
+6. 온라인 스키마 마이그레이션
+
+
+### PlanetScale setting(Connecting to PlanetScale )
+
+1. PowerShell 실행 (Scoop 설치 )
+
+PS D:\> Set-ExecutionPolicy RemoteSigned -scope CurrentUser
+메시지가나 나타나면 
+'Y' 키
+
+PS D:\> iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
+
+
+2. 비주얼 스튜디오 코드 실행
+터미널에서 다음과 같이 입력
+scoop bucket add pscale https://github.com/planetscale/scoop-bucket.git
+
+scoop install pscale mysql
+
+scoop update pscale
+
+
+3. 로그인 및 연결 
+>> pscale auth login
+
+>> 자동으로 뜨는 웹 페이시 에서 code fonfirm 클릭
+
+>> pscale region list 접속 목록 확인
+
+>> pscale database create carrot-market --region ap-northeast
+
+>> pscale connect carrot-market (데이터베이스 연결) 
+
+.env파일을 수정 DATABASE_URL="mysql://127.0.0.1:3306/carrot-market" 
+
+
+### Referential integrity (참조 무결성)
+
+(어떤 다른 모델을 참조하는 경우 해당 모델이 반드시 존재해야 함)
+참조 무결성은 모든 참조가 유효함을 나타내는 데이터 세트의 속성입니다. 참조 무결성을 위해서는 한 레코드가 다른 레코드를 참조하는 경우 반드시 해당 참조하는 레코드가 존재해야 한다. 예를 들어 Post 모델이 user필드를 정의하는 경우 User(모델)도 반드시 존재해야 합니다. 참조 무결성은 참조를 손상시키는 변경을 방지하는 제약 조건과 레코드를 업데이트하거나 삭제할 때 실행되는 참조 작업을 정의함으로써 적용됩니다.
+https://www.prisma.io/docs/concepts/components/prisma-schema/relations/referential-integrity
+
+datasource에서 referential integrity 설정
+referential integrity(참조 무결성)은 현재 previewFeatures입니다. 이를 활성화하려면 schema.prisma의 generator 블록에 있는 previewFeatures 목록에 추가합니다.
+```
+// schema.prisma
+generator client {
+provider = "prisma-client-js"
+}
+
+datasource db {
+provider = "mysql"
+url = env("DATABASE_URL")
+relationMode = "prisma"
+}
+로 변경했어요
+```
+
+### db push
+db push는 Prisma Migrate와 동일한 엔진을 사용하여 Prisma 스키마를 데이터베이스 스키마와 동기화하며 스키마 프로토타이핑에 가장 적합합니다.
+
+npx prisma db push
+https://www.prisma.io/docs/concepts/components/prisma-migrate/db-push
+
+
+
+### Prisma Client
+
+npm install @prisma/client
+
+TypeScript 및 Node.js용 직관적인 데이터베이스 클라이언트
+Prisma Client는 생각하는 방식으로 구성하고 앱에 맞춤화된 유형으로 Prisma 스키마에서 자동 생성되는 쿼리 빌더입니다.
+
+```
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
+```
+https://www.prisma.io/docs/concepts/components/prisma-client
+
+Prisma Studio
+
+:Prisma 에서 DB GUI tool 와 같은 기능을 하는 studio 기능
+
+npx prisma studio
+
+
+
+### API Routes
+
+API route는 Next.js로 API를 빌드하기 위한 솔루션을 제공합니다. pages/api 폴더 내의 모든 파일은 /api/*에 매핑되며 API endpoint로 처리됩니다. server-side 전용 번들이며 client-side 번들 크기를 늘리지 않습니다.
+req: http.IncomingMessage의 인스턴스와 pre-built된 일부 미들웨어
+res: http.ServerResponse의 인스턴스와 일부 helper함수
+
+예를 들어 다음 API 경로 pages/api/user.js는 상태 코드가 200인 json 응답을 반환합니다.
+```
+export default function handler(req, res) {
+res.status(200).json({ name: 'John Doe' })
+}
+```
+https://nextjs.org/docs/api-routes/introduction
+
+
+-----------------------------React hook form -----------------
+React Hook Form설치
+
+npm i react-hook-form
+
+
+register
+
+register: (name: string, RegisterOptions?) => ({ onChange, onBlur, name, ref })
+이 메서드를 사용하면 input을 등록하거나 엘리먼트를 선택하고 React Hook Form에 유효성 검사 규칙을 적용할 수 있습니다. 유효성 검사 규칙은 모두 HTML 표준을 기반으로 하며 사용자 지정 유효성 검사 방법도 허용합니다.
+```
+import { useForm } from "react-hook-form";
+
+const { register, handleSubmit } = useForm();
+
+< input {...register("firstName", { required: true })} placeholder="First name" />
+```
+https://react-hook-form.com/api/useform/register
+
+
+
+register 옵션들
+required: string | { value: boolean, message: string}
+ex) < input {...register("test", {required: 'error message' })}/>
+https://react-hook-form.com/api/useform/register
+
+handleSubmit
+이 함수는 form 유효성 검사가 성공하면 form 데이터를 수신합니다.
+ex) < form onSubmit={handleSubmit(onSubmit, onError)} />
+
+onSubmit (SubmitHandler) (성공적인 콜백)
+(data: Object, e?: Event) => void
+
+onError (SubmitErrorHandler) (오류 콜백)
+(errors: Object, e?: Event) => void
+
+https://react-hook-form.com/api/useform/handlesubmit
+
+validate
+유효성을 검사할 인수로 콜백 함수를 전달하거나 콜백 함수의 개체를 전달하여 모든 유효성을 검사할 수 있습니다.
+```
+< input
+{...register("test", {
+validate: value => value === '1'
+})}
+/ >
+```
+https://react-hook-form.com/api/useform/register/
+
+mode: onChange | onBlur | onSubmit | onTouched | all = 'onSubmit'
+이 옵션을 사용하면 사용자가 form을 제출하기 전에 유효성 검사를 할 수 있습니다(onSubmit 이벤트).
+https://react-hook-form.com/api/useform#props
+
+onTouched
+유효성 검사는 첫 번째 blur 이벤트에서 트리거됩니다. 그 후에는 모든 change 이벤트에서 트리거됩니다.
+
+all
+blur 및 change 이벤트에서 유효성 검사가 트리거됩니다.
+
+```
+import { useForm } from "react-hook-form"
+
+export default function Forms(){
+  const {register, handleSubmit} = useForm();
+  const onValid = ()=>{
+    console.log("valid");
+  }
+  return (
+  <form onSubmit={handleSubmit(onValid)} >
+    <input {...register("username",{
+      required:true,
+    })} 
+    type="text" 
+    placeholder="Username" />
+    <input {...register("email",{
+      required:true,
+    })} 
+    type="email" 
+    placeholder="Email" />
+    <input {...register("password",{
+      required:true,
+    })} 
+    type="password" 
+    placeholder="Password" />
+    <input type="submit" value="Create Account" />
+  </form>
+  )
+}
+````
