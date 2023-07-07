@@ -468,16 +468,23 @@ React Hook Form설치
 npm i react-hook-form
 
 
-register
+### register
 
 register: (name: string, RegisterOptions?) => ({ onChange, onBlur, name, ref })
 이 메서드를 사용하면 input을 등록하거나 엘리먼트를 선택하고 React Hook Form에 유효성 검사 규칙을 적용할 수 있습니다. 유효성 검사 규칙은 모두 HTML 표준을 기반으로 하며 사용자 지정 유효성 검사 방법도 허용합니다.
+```
+ const {register, handleSubmit, formState:{errors}} = useForm<LoginForm>({
+    mode:"onChange",
+  });
+```
+mode에 onChange를 집어넣으면 인풋의 값이 바뀌는 것을 실시간으로 감지하여 에러 모양 표시
+
 ```
 import { useForm } from "react-hook-form";
 
 const { register, handleSubmit } = useForm();
 
-< input {...register("firstName", { required: true })} placeholder="First name" />
+<input {...register("firstName", { required: true })} placeholder="First name" />
 ```
 https://react-hook-form.com/api/useform/register
 
@@ -522,32 +529,60 @@ all
 blur 및 change 이벤트에서 유효성 검사가 트리거됩니다.
 
 ```
-import { useForm } from "react-hook-form"
+import { FieldErrors, useForm } from "react-hook-form"
+
+interface LoginForm {
+  username:string;
+  password:string;
+  email:string;
+}
 
 export default function Forms(){
-  const {register, handleSubmit} = useForm();
-  const onValid = ()=>{
+  const {register, handleSubmit, formState:{errors}} = useForm<LoginForm>({
+    mode:"onChange",
+  });
+  const onValid = (data:LoginForm)=>{
     console.log("valid");
   }
+  const onInvalid = (errors: FieldErrors)=>{
+    console.log(errors)
+  };
   return (
-  <form onSubmit={handleSubmit(onValid)} >
+  <form onSubmit={handleSubmit(onValid, onInvalid)} >
     <input {...register("username",{
-      required:true,
+      required:"Username is required!",
+      minLength:{
+        message:"The username should be longer than 5 chars.",
+        value:5,
+      },
     })} 
     type="text" 
-    placeholder="Username" />
+    placeholder="Username" 
+    />
     <input {...register("email",{
-      required:true,
+      required:"Email is required!",
+      validate:{
+        notGmail:(value) => !value.includes("@gmail.com") ? "": "Gmail is not allowed",
+      },
     })} 
     type="email" 
-    placeholder="Email" />
+    placeholder="Email"
+    className={`${Boolean(errors.email?.message) ? "border-red-500" :""}`} 
+    />
+    {errors.email?.message}
     <input {...register("password",{
-      required:true,
+      required:"Password is required!",
     })} 
     type="password" 
-    placeholder="Password" />
+    placeholder="Password" 
+    />
     <input type="submit" value="Create Account" />
   </form>
   )
 }
 ````
+
+아래와 같이 tailwind css를 적용하여 에러메시지를 표시해줄 수도 있음. 
+```
+ className={`${Boolean(errors.email?.message) ? "border-red-500" :""}`} 
+ ```
