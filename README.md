@@ -586,3 +586,48 @@ export default function Forms(){
 ```
  className={`${Boolean(errors.email?.message) ? "border-red-500" :""}`} 
  ```
+
+
+
+ Uploading JSON data
+
+POST프로토콜로 JSON인코딩된 데이터를 보내기 위해 fetch()를 사용합니다.
+body의 데이터 유형은 반드시 "Content-Type" 헤더와 일치해야 함
+```
+await fetch(url, {
+method: 'POST', // *GET, POST, PUT, DELETE 등
+body: JSON.stringify(data), // data can be `string` or {object}!
+headers:{
+'Content-Type': 'application/json'
+}
+})
+```
+https://developer.mozilla.org/ko/docs/Web/API/Fetch_API/Using_Fetch#uploading_json_data
+
+
+자주 쓰는 HTTP 상태 코드
+
+200 OK: 요청이 성공적으로 되었습니다. (성공)
+
+400 Bad Request: 이 응답은 잘못된 문법으로 인하여 서버가 요청을 이해할 수 없음을 의미합니다. (클라이언트에서 Request할 때 발생한 문제)
+
+403 Forbidden: 클라이언트는 콘텐츠에 접근할 권리를 가지고 있지 않습니다. 401과 다른 점은 서버가 클라이언트가 누구인지 알고 있습니다.
+
+405 Method Not Allowed: 요청한 메서드는 서버에서 알고 있지만, 제거되었고 사용할 수 없습니다. (허용되지 않은 메서드 사용)
+
+500 Internal Server Error: 서버가 처리 방법을 모르는 상황이 발생했습니다. 서버는 아직 처리 방법을 알 수 없습니다.
+https://developer.mozilla.org/ko/docs/Web/HTTP/Status
+
+고차함수(Higher Order Function(HOF))이란?
+하나 이상의 함수를 인자로 받고, 결과로 함수를 리턴합니다. 다시 말해 함수가 또 하나의 함수를 다루는 함수입니다. HOF를 이용해서 자바스크립트에서 함수형 프로그래밍을 다룰 수 있습니다.
+```
+// 함수가 또 다른 함수를 리턴하는 구조
+const add = function(x) {
+return function(y) {
+return x+y;
+}
+}
+
+const sum = add(2)(3); // 5
+```
+https://javascript-1.gitbook.io/javascript/hof-higher-order-function
