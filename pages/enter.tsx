@@ -8,10 +8,17 @@ interface EnterForm {
   email?:string;
   phone?:string;
 }
-
+interface MutaionResult {
+  ok:boolean;
+}
+interface TokenForm {
+  token:string;
+}
 export default function Enter() {
-  const [enter, {loading, data, error}] =useMutation("/api/users/enter");
+  const [enter, {loading, data, error}] =useMutation<MutaionResult>("/api/users/enter");
+  const [confirmToken, {loading:tokenLoading, data:tokenData,}] =useMutation<MutaionResult>("/api/users/confirm");
   const {register, handleSubmit,reset} = useForm<EnterForm>();
+  const {register:tokenRegister, handleSubmit:tokenHandleSubmit}=useForm<TokenForm>();
   const [method, setMethod] = useState<"email" | "phone">("email");
   const onEmailClick = () => {
     reset();
@@ -24,11 +31,35 @@ export default function Enter() {
   const onValid =(validForm:EnterForm)=>{
     enter(validForm);
   };
+  const onTokenValid =(validForm:TokenForm)=>{
+   if(tokenLoading) return;
+   confirmToken(validForm)
+  }
   console.log(loading,data,error);
+  console.log(data);
   return (
     <div className="mt-16 px-5">
       <h3 className="text-3xl font-bold text-center">Enter to Carrot</h3>
       <div className="mt-8">
+    {data?.ok? (
+              <form onSubmit={tokenHandleSubmit(onTokenValid)} className="flex flex-col mt-8">
+              <div className="mt-1">
+                <Input
+                  register={tokenRegister("token", {
+                    required: true,
+                  })}
+                  name="token"
+                  label="Confirmation Token"
+                  type="number"
+                  required
+                />
+              </div>
+              <button className="mt-6 bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 border-transparent rounded-md shadow-sm font-medium focus:ring-2 focus:ring-offset-2 focus:ring-orange-500">
+                {tokenLoading? "Loading":"Confirm Token"}
+              </button>
+            </form>
+    ):(        
+      <>
         <div className="flex flex-col items-center">
           <h5 className="text-sm text-gray-500 font-medium">Enter using:</h5>
           <div className="mt-8 grid grid-cols-2 gap-16 w-full border-b">
@@ -66,6 +97,8 @@ export default function Enter() {
             {method === "phone" ? "Get one-time password" : null}
           </button>
         </form>
+        </>
+        )}
         <div className="mt-8">
           <div className="relative">
             <div className="absolute w-full border-t border-gray-300" />

@@ -631,3 +631,74 @@ return x+y;
 const sum = add(2)(3); // 5
 ```
 https://javascript-1.gitbook.io/javascript/hof-higher-order-function
+
+
+
+Prisma 필드 자동 완성 문제 (2022.4월 말 기준 해결)
+referentialIntegrity가 아직 preview 단계의 기능이라서 VSCode에서 자동완성이 완전히 지원되지 않는거 같네요.
+user User까지 작성하고 referentialIntegrity = "prisma"를 잠깐 주석처리하시고, 저장하면서 진행해야 될 것 같습니다.
+
+connect
+connect 쿼리는 ID 또는 고유 식별자를 지정하여 레코드를 기존 relation 레코드에 연결합니다. (레코드를 연결)
+https://www.prisma.io/docs/reference/api-reference/prisma-client-reference#connect
+
+connectOrCreate
+connectOrCreate는 ID 또는 고유 식별자로 기존 관련 레코드에 레코드를 연결하거나 레코드가 존재하지 않는 경우 새 관련 레코드를 생성합니다.
+```
+tags: {
+connectOrCreate: {
+create: {
+name: 'computing',
+},
+where: {
+name: 'computing',
+},
+},
+},
+```
+https://www.prisma.io/docs/reference/api-reference/prisma-client-reference#connectorcreate
+
+
+Twilio
+Twilio는 전화 걸기 및 받기, 문자 메시지 보내기 및 받기, 웹 서비스 API를 사용하여 기타 커뮤니케이션 기능 수행을 위한 프로그래밍 가능한 커뮤니케이션 도구를 제공합니다.
+https://www.twilio.com/
+
+Twilo Document
+https://www.twilio.com/docs
+
+Messaging Services
+메시징 서비스는 특정 사용 사례 및 메시징 캠페인을 위한 메시징 기능을 번들로 제공하는 컨테이너입니다. 특정 채널 및 번호 유형 중에서 선택하여 발신자를 메시징 서비스와 일치시키십시오.
+
+랜덤 6자리 숫자 생성
+방법 1) Math.floor(100000 + Math.random() * 900000) + "";
+방법 2) String(Math.random()).substring(2,8)
+
+
+
+twilio설치
+npm i twilio
+
+Node.js용 프로그래밍 가능한 SMS 빠른 시작
+Twilio의 메시징 채널을 사용하여 전송된 모든 메시징은 A2P(Application-to-Person) 메시징으로 취급되며 Twilio의 메시징 정책이 적용됩니다. 몇 줄의 코드로 Node.js 애플리케이션에서 Twilio Programmable SMS로 문자 메시지를 보내고 받을 수 있습니다.
+```
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const twilioClient = require('twilio')(accountSid, authToken);
+
+const messageInstance: MessageInstance = await twilioClient.messages.create({
+messagingServiceSid: process.env.MESSAGING_SERVICES_SID,
+to: process.env.MY_PHONE_NUMBER as string,
+body: `휴대폰 로그인을 위한 토큰 ${createdRandomPayload} 입니다.`,
+});
+```
+https://www.twilio.com/docs/sms/quickstart/node
+
+.env 환경변수
+TWILIO_SID=
+TWILIO_TOKEN=
+TWILIO_MSID=
+MY_PHONE=+821012345678
+
+딱히 에러는 안나는데 문자가안와서 댓글보고 이거저거 해보니
+from: "자기가 부여받은 번호 ", 작성해주고 ( twilo에서 send as SMS 에 From phone nubmer 에서 확인할수있음)
+.env 에는 PHONE_NUM="+821012341234" 일케 작성하니 문자 날라오네욥
