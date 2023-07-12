@@ -1,7 +1,7 @@
 import Layout from "@components/layout";
 import type { NextPage } from "next";
 
-const Live: NextPage =() => {
+const Streams: NextPage =() => {
   return (
 <Layout hasTabBar canGoBack >
     <div className="py-10 space-y-4 divide-y-2">
@@ -23,4 +23,4 @@ const Live: NextPage =() => {
 </Layout>);
 }
 
-export default Live;
+export default Streams;
