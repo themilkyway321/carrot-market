@@ -589,7 +589,7 @@ export default function Forms(){
 
 
 
- Uploading JSON data
+ ## Uploading JSON data
 
 POST프로토콜로 JSON인코딩된 데이터를 보내기 위해 fetch()를 사용합니다.
 body의 데이터 유형은 반드시 "Content-Type" 헤더와 일치해야 함
@@ -605,7 +605,7 @@ headers:{
 https://developer.mozilla.org/ko/docs/Web/API/Fetch_API/Using_Fetch#uploading_json_data
 
 
-자주 쓰는 HTTP 상태 코드
+## 자주 쓰는 HTTP 상태 코드
 
 200 OK: 요청이 성공적으로 되었습니다. (성공)
 
@@ -659,7 +659,7 @@ name: 'computing',
 https://www.prisma.io/docs/reference/api-reference/prisma-client-reference#connectorcreate
 
 
-Twilio
+## Twilio
 Twilio는 전화 걸기 및 받기, 문자 메시지 보내기 및 받기, 웹 서비스 API를 사용하여 기타 커뮤니케이션 기능 수행을 위한 프로그래밍 가능한 커뮤니케이션 도구를 제공합니다.
 https://www.twilio.com/
 
@@ -702,3 +702,112 @@ MY_PHONE=+821012345678
 딱히 에러는 안나는데 문자가안와서 댓글보고 이거저거 해보니
 from: "자기가 부여받은 번호 ", 작성해주고 ( twilo에서 send as SMS 에 From phone nubmer 에서 확인할수있음)
 .env 에는 PHONE_NUM="+821012341234" 일케 작성하니 문자 날라오네욥
+
+
+## Iron session
+
+세션 vs 토큰 vs 쿠키? 기초개념 잡아드림. 10분 순삭! (노마드코더 유튜브)
+https://www.youtube.com/watch?v=tosLBcAX1vk
+
+
+데이터를 저장하기 위해 서명되고 암호화된 쿠키를 사용하는 Node.js stateless session 유틸리티.
+Next.js, Express, Nest.js, Fastify 및 모든 Node.js HTTP 프레임워크와 함께 작동합니다. 
+- 서명, 암호화된 쿠키를 사용하는 nodejs stateless 세션 도구
+- JWT는 암호화되지 않고 서명이 되어있음
+- 유저가 안에 있는 정보를 볼 수 없음
+- 세션을 위한 백엔드 구축이 필요 없음
+
+npm i iron-session
+```
+import { withIronSessionApiRoute } from "iron-session/next";
+
+export default withIronSessionApiRoute(NextApiHandler)
+```
+https://github.com/vvo/iron-session
+
+req.session.save()
+세션 데이터를 암호화하고 쿠키를 설정합니다.
+
+32자 랜덤 비밀번호 필요하신 분들은 아래 사이트에서 Length 32로 설정 후 복사해서 사용하시면 됩니다.
+https://1password.com/password-generator/
+
+
+
+TypeScript로 세션 데이터 Tying (req.session에 데이터 입력)
+req.session은 자동으로 올바른 유형으로 채워지므로 .save() 및 .destroy()를 호출할 수 있습니다.
+그러나 더 나아가 세션 데이터도 입력할 수 있습니다. 이 코드는 특정 시점에 필요한 파일에 있는 한 프로젝트의 아무 곳에나 넣을 수 있습니다.
+```
+declare module "iron-session" {
+interface IronSessionData {
+user?: {
+id: number;
+admin?: boolean;
+};
+}
+}
+```
+https://github.com/vvo/iron-session#typing-session-data-with-typescript
+
+Module Augmentation
+(위와 같이 모듈을 가져와서 module augmentation을 사용해서 컴파일러에게 알려줄 수 있습니다.)
+JavaScript 모듈은 병합을 지원하지 않지만 기존 객체를 가져온 다음 업데이트하여 패치할 수 있습니다.
+```
+import { Observable } from "./observable";
+
+declare module "./observable" {
+interface Observable< T> {
+map< U>(f: (x: T) => U): Observable< U>;
+}
+}
+```
+https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation
+
+
+get user profile
+
+모든 api는 실제 백엔드 없이 개별적으로 동작하기 때문에
+
+각 api 마다 type과 withIronSessionApiRoute config를 매번 설정해줘야함
+
+쿠키에 세션이 userId가 저장되어 있기 때문에 Id에 해당하는 user정보를 가져올 수 있음
+
+```tsx
+import { withIronSessionApiRoute } from 'iron-session/next';
+import { NextApiRequest, NextApiResponse } from 'next';
+import withHandler, { ResponseType } from '@libs/server/withHandler';
+import client from '@libs/server/client';
+
+// iron session에 sesstion type 정의
+declare module 'iron-session' {
+interface IronSessionData {
+user?: {
+id: number;
+};
+}
+}
+
+async function handler(
+req: NextApiRequest,
+res: NextApiResponse
+) {
+console.log(req.session.user);
+const profile = await client.user.findUnique({
+where: {
+id: req.session.user?.id,
+},
+});
+res.json({
+ok: true,
+profile,
+});
+}
+
+export default withIronSessionApiRoute(withHandler('GET', handler), {
+cookieName: 'carrot_cookie',
+password: 'complex_password_at_least_32_characters_long',
+// secure: true should be used in production (HTTPS) but can't be used in development (HTTP)
+cookieOptions: {
+secure: process.env.NODE_ENV === 'production',
+},
+});
+```
