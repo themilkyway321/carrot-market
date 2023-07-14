@@ -811,3 +811,28 @@ secure: process.env.NODE_ENV === 'production',
 },
 });
 ```
+
+
+
+
+# 11.0
+기본 유형 매핑
+이 필드에 사용해야 하는 기본 데이터베이스 유형을 정의합니다.
+https://www.prisma.io/docs/concepts/components/prisma-schema/data-model#native-types-mapping
+
+MySQL 기본 데이터베이스 유형
+ex) @db.Text, @db.MediumText, @db.LongText
+https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#mysql
+
+MySQL에서 length로 인덱스 길이 구성
+```
+model Id {
+id String @id @db.VarChar(3000)
+}
+```
+https://www.prisma.io/docs/concepts/components/prisma-schema/indexes#configuring-the-length-of-indexes-with-length-mysql
+
+Next.js로 PrismaClient를 인스턴스화하기 위한 모범 사례
+(+아래 경고를 해결하는 효과적인 방법)
+warn(prisma-client) There are already 10 instances of Prisma Client actively running.
+https://www.prisma.io/docs/support/help-articles/nextjs-prisma-client-dev-practices
