@@ -7,9 +7,15 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import useSWR from "swr";
 
+interface ItemWithCount extends Item {
+  _count:{
+    favs:number;
+  }
+}
+
 interface ItemsResponse {
   ok:boolean;
-  items:Item[];
+  items:ItemWithCount[];
 }
 
 const Home: NextPage = () => {
@@ -28,7 +34,7 @@ const Home: NextPage = () => {
           title={v.name}
           price={v.price}
           comments={1}
-          hearts={1}
+          hearts={v._count.favs}
         />
       ))}
       <FloatingButton href="/items/upload">

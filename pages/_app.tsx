@@ -5,7 +5,12 @@ import { SWRConfig } from "swr/_internal";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-  <SWRConfig value={{fetcher:(url:string) =>fetch(url).then((response)=>response.json())}}>
+    <SWRConfig
+    value={{
+      fetcher: (url: string) =>
+        fetch(url).then((response) => response.json()),
+    }}
+  >
     <div className='w-full max-w-xl mx-auto'>
       <Component {...pageProps} />
       </div>

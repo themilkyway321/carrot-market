@@ -836,3 +836,11 @@ Next.js로 PrismaClient를 인스턴스화하기 위한 모범 사례
 (+아래 경고를 해결하는 효과적인 방법)
 warn(prisma-client) There are already 10 instances of Prisma Client actively running.
 https://www.prisma.io/docs/support/help-articles/nextjs-prisma-client-dev-practices
+
+
+
+useSWR은 SWR에서 제공하는 기본 훅 중 하나로 현재 이 프로젝트에서는 주로 데이터를 요청해서 가져오고, 가져온 데이터를 캐싱하기 위해 사용했습니다. GET요청을 위해 사용했습니다.
+useMutation은 SWR에서 제공하는 훅이 아닌 커스텀 훅으로 POST요청을 위한 뮤테이션 함수와 POST요청의 결과 값을 반환합니다.
+
+정리하자면, useSWR은 사용자 정보 조회, 상품 정보 조회 등을 위해 사용되었습니다. (GET)
+useMutation은 로그인, 로그아웃, 상품 추가 등을 위해 사용되었습니다. (POST)
