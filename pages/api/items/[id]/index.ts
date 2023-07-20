@@ -49,8 +49,8 @@ async function handler(
         userId:user?.id
       },
       select:{
-        id:true
-      }
+        id:true,
+      },
     })
   );
   res.json({ ok: true, item, isLiked, relatedProducts });

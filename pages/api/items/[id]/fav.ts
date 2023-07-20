@@ -13,15 +13,15 @@ async function handler(
   session:{user}, 
   }= req;
   const alreadyExists = await client.fav.findFirst({
-    where:{
-      itemId:Number(id),
-      userId:user?.id,
+    where: {
+      itemId: Number(id),
+      userId: user?.id,
     },
   });
   if(alreadyExists){
     await client.fav.delete({
       where:{
-        id:alreadyExists.id
+        id:alreadyExists.id,
       },
     });
   }else{

@@ -30,11 +30,7 @@ export default function Forms(){
     placeholder="Username" 
     />
     <input {...register("email",{
-      required:"Email is required!",
-      validate:{
-        notGmail:(value) => !value.includes("@gmail.com") ? "": "Gmail is not allowed",
-      },
-    })} 
+      required:"Email is required!"})} 
     type="email" 
     placeholder="Email"
     className={`${Boolean(errors.email?.message) ? "border-red-500" :""}`} 

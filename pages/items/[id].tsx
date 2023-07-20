@@ -20,7 +20,11 @@ interface ItemDetailResponse {
   isLiked:boolean;
 }
 
-const ItemDetail: NextPage = () => {
+const ItemDetail: NextPage<ItemDetailResponse> = ({
+  item,
+  relatedProducts,
+  isLiked,
+}) => {
   const { user, isLoading } = useUser();
   const router = useRouter();
   const {mutate} =useSWRConfig();
@@ -34,8 +38,7 @@ const ItemDetail: NextPage = () => {
     // mutate("/api/users/me", (prev: any) => ({ ok: !prev.ok }), false);
     toggleFav({});
   };
-  console.log(data)
-  
+
   return (
 <Layout canGoBack>
       <div className="px-4 py-10">
@@ -45,20 +48,20 @@ const ItemDetail: NextPage = () => {
             <div className="w-12 h-12 rounded-full bg-slate-300" />
             <div>
               <p className="text-sm font-medium text-gray-700">{data?.item?.user?.name} </p>
-              <Link className="text-xs font-medium text-gray-500" href={`/users/profiles/${data?.item?.user?.id}`}>View profile &rarr;</Link>
+              <Link className="text-xs font-medium text-gray-500" href={`/users/profiles/${item?.user?.id}`}>View profile &rarr;</Link>
             </div>
           </div>
           <div className="mt-5">
-            <h1 className="text-3xl font-bold text-gray-900">{data?.item.name}</h1>
-            <p className="text-3xl mt-3 text-gray-900">${data?.item.price}</p>
+            <h1 className="text-3xl font-bold text-gray-900">{data?.item?.name}</h1>
+            <p className="text-3xl mt-3 text-gray-900">${data?.item?.price}</p>
             <p className="text-base my-6 text-gray-700">
-              {data?.item.description}
+              {data?.item?.description}
             </p>
             <div className="flex items-center justify-between space-x-2">
               <button className="flex-1 bg-orange-500 text-white py-3 rounded-md focus:ring-2 focus:ring-offset-2 focus:ring-orange-400 hover:bg-orange-600">Talk to seller</button>
               <button onClick={onFavClick} 
               className={cls("p-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 ",
-              data?.isLiked ? "text-red-400 hover:text-red-500":"text-gray-400 hover:text-gray-500")}>
+              isLiked ? "text-red-400 hover:text-red-500":"text-gray-400 hover:text-gray-500")}>
                 <svg
                   className="h-6 w-6 "
                   xmlns="http://www.w3.org/2000/svg"
@@ -81,7 +84,7 @@ const ItemDetail: NextPage = () => {
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Similar items</h2>
           <div className="mt-6 grid grid-cols-2 gap-4">
-              {data?.relatedProducts?.map((v) => (
+              {relatedProducts?.map((v) => (
                 <Link href={`/items/${v.id}`}>
                 <div key={v.id}>
                   <div className="h-56 w-full bg-slate-400 mb-4"/>
